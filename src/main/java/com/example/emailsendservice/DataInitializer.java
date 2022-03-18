@@ -22,6 +22,18 @@ public class DataInitializer {
                 .email("first.user@gmail.com")
                 .build();
 
+        User user2 = User.builder()
+                .username("SecondUser")
+                .email("second.user@gmail.com")
+                .build();
+
+        User user3 = User.builder()
+                .username("ThirdUser")
+                .email("third.user@gmail.com")
+                .build();
+
         this.repository.save(user1);
+        this.repository.save(user2);
+        this.repository.save(user3);
     }
 }
