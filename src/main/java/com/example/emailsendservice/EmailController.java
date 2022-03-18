@@ -3,6 +3,7 @@ package com.example.emailsendservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,16 @@ public class EmailController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(user);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> create(@RequestBody User user, UriComponentsBuilder builder) {
+        User createdUser = this.emailService.create(user);
+        return ResponseEntity
+                .created(builder.pathSegment("api", "emails", "{id}")
+                        .buildAndExpand(createdUser.getId())
+                        .toUri())
+                .build();
     }
 
     @DeleteMapping("/{id}")

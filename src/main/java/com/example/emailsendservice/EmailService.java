@@ -27,6 +27,10 @@ public class EmailService {
         return null;
     }
 
+    public User create(User user) {
+        return this.userRepository.save(user);
+    }
+
     public void delete(User user) {
         this.userRepository.delete(user);
     }
