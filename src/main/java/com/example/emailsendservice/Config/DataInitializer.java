@@ -22,6 +22,10 @@ public class DataInitializer {
         //lukasz.nojman07@gmail.com
         //pio_wozniak@yahoo.com
         //studniapl@gmail.com
+        //first.user@gmail.com
+        //second.user@gmail.com
+        //third.user@gmail.com
+        //fourth.user@gmail.com
         User user1 = User.builder()
                 .username("FirstUser")
                 .email("L.Nojman11@wp.pl")

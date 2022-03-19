@@ -1,11 +1,12 @@
 package com.example.emailsendservice.Controllers;
 
 import com.example.emailsendservice.EmailSenderService;
+import com.example.emailsendservice.Models.MailMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api")
@@ -18,15 +19,21 @@ public class EmailSenderController {
         this.emailSenderService = service;
     }
 
-    @GetMapping("/sendmail")
-    public String sendEmail() {
-        this.emailSenderService.sendSimpleMessage("L.Nojman11@wp.pl","Test", "Teest");
+//    @GetMapping("/sendmail/{mail}")
+//    public String sendEmail(@PathVariable String mail, @RequestBody MailMessage message) {
+//        this.emailSenderService.sendSimpleMessage(mail,message);
+//        return "Email sent";
+//    }
+
+    @GetMapping("/sendmail/{id}")
+    public String sendEmail(@PathVariable Long id, @RequestBody MailMessage message) {
+        this.emailSenderService.sendSimpleMessage(id,message);
         return "Email sent";
     }
 
     @GetMapping("/sendToAll")
-    public String sendEmailToAll() {
-        this.emailSenderService.sendToAll();
-        return "Email send";
+    public String sendEmailToAll(@RequestBody MailMessage message) {
+        this.emailSenderService.sendToAll(message);
+        return "Email sent to all";
     }
 }
