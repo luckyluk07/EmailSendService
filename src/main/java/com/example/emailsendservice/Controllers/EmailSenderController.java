@@ -20,8 +20,13 @@ public class EmailSenderController {
 
     @GetMapping("/sendmail")
     public String sendEmail() {
-        //lukasz.nojman07@gmail.com
         this.emailSenderService.sendSimpleMessage("L.Nojman11@wp.pl","Test", "Teest");
         return "Email sent";
+    }
+
+    @GetMapping("/sendToAll")
+    public String sendEmailToAll() {
+        this.emailSenderService.sendToAll();
+        return "Email send";
     }
 }
