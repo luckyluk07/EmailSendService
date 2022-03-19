@@ -20,7 +20,7 @@ public class DataInitializer {
     public void initUsers() {
         User user1 = User.builder()
                 .username("FirstUser")
-                .email("first.user@gmail.com")
+                .email("L.Nojman11@wp.pl")
                 .build();
 
         User user2 = User.builder()
