@@ -42,6 +42,16 @@ public class EmailController {
                 .build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateById(@PathVariable Long id, @RequestBody User updatedUser) {
+        User user = this.emailService.findById(id);
+        if (user != null) {
+            this.emailService.updateById(id, updatedUser);
+            return ResponseEntity.accepted().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         User user = this.emailService.findById(id);

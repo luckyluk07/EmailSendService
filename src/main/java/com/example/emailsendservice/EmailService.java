@@ -2,6 +2,7 @@ package com.example.emailsendservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,11 @@ public class EmailService {
 
     public User create(User user) {
         return this.userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateById(Long id, User updatedUser) {
+        this.userRepository.updateUser(id, updatedUser.getEmail(), updatedUser.getUsername());
     }
 
     public void delete(User user) {
