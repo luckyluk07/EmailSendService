@@ -2,6 +2,7 @@ package com.example.emailsendservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,11 @@ public class EmailService {
             return this.mapper.userModelToEmailDto(user.get());
         }
         return null;
+    }
+
+    @Transactional
+    public void updateEmail(Long id, EmailDto dto) {
+        this.repository.updateEmail(id, dto.getEmail());
     }
 
 }
