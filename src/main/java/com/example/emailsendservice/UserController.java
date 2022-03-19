@@ -8,7 +8,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/emails")
+@RequestMapping(value = "/api/users")
 public class UserController {
     private UserService userService;
 
