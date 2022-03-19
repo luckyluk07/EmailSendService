@@ -1,5 +1,7 @@
-package com.example.emailsendservice;
+package com.example.emailsendservice.Services;
 
+import com.example.emailsendservice.Models.User;
+import com.example.emailsendservice.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

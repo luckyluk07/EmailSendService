@@ -1,4 +1,7 @@
-package com.example.emailsendservice;
+package com.example.emailsendservice.Mappers;
+
+import com.example.emailsendservice.Models.EmailDto;
+import com.example.emailsendservice.Models.User;
 
 public class EmailMapper {
 

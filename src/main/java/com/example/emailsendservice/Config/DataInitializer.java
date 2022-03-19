@@ -1,7 +1,8 @@
-package com.example.emailsendservice;
+package com.example.emailsendservice.Config;
 
+import com.example.emailsendservice.Repositories.UserRepository;
+import com.example.emailsendservice.Models.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

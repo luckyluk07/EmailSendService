@@ -1,4 +1,4 @@
-package com.example.emailsendservice;
+package com.example.emailsendservice.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

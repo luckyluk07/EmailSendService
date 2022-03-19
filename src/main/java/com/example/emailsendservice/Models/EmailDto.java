@@ -1,4 +1,4 @@
-package com.example.emailsendservice;
+package com.example.emailsendservice.Models;
 
 import lombok.*;
 
