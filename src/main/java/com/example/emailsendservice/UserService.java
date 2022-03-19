@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EmailService {
+public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    public EmailService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

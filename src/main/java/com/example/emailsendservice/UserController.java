@@ -6,26 +6,25 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/emails")
-public class EmailController {
-    private EmailService emailService;
+public class UserController {
+    private UserService userService;
 
     @Autowired
-    public EmailController(EmailService emailService) {
-        this.emailService = emailService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public List<User> findAll() {
-        return this.emailService.findAll();
+        return this.userService.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
-        User user = this.emailService.findById(id);
+        User user = this.userService.findById(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
@@ -34,7 +33,7 @@ public class EmailController {
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody User user, UriComponentsBuilder builder) {
-        User createdUser = this.emailService.create(user);
+        User createdUser = this.userService.create(user);
         return ResponseEntity
                 .created(builder.pathSegment("api", "emails", "{id}")
                         .buildAndExpand(createdUser.getId())
@@ -44,9 +43,9 @@ public class EmailController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateById(@PathVariable Long id, @RequestBody User updatedUser) {
-        User user = this.emailService.findById(id);
+        User user = this.userService.findById(id);
         if (user != null) {
-            this.emailService.updateById(id, updatedUser);
+            this.userService.updateById(id, updatedUser);
             return ResponseEntity.accepted().build();
         }
         return ResponseEntity.notFound().build();
@@ -54,9 +53,9 @@ public class EmailController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        User user = this.emailService.findById(id);
+        User user = this.userService.findById(id);
         if (user != null) {
-            this.emailService.delete(user);
+            this.userService.delete(user);
             return ResponseEntity.accepted().build();
         }
         return ResponseEntity.notFound().build();
