@@ -1,4 +1,4 @@
-package com.example.emailsendservice;
+package com.example.emailsendservice.Services;
 
 import com.example.emailsendservice.Models.MailMessage;
 import com.example.emailsendservice.Models.User;
