@@ -1,6 +1,8 @@
 package com.example.emailsendservice.Services;
 
+import com.example.emailsendservice.Mappers.UserMapper;
 import com.example.emailsendservice.Models.User;
+import com.example.emailsendservice.Models.UserDto;
 import com.example.emailsendservice.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,13 +32,18 @@ public class UserService {
         return null;
     }
 
+    public User create(UserDto dto) {
+        User user = UserMapper.dtoToUserModel(dto);
+        return this.userRepository.save(user);
+    }
+
     public User create(User user) {
         return this.userRepository.save(user);
     }
 
     @Transactional
-    public void updateById(Long id, User updatedUser) {
-        this.userRepository.updateUser(id, updatedUser.getEmail(), updatedUser.getUsername());
+    public void updateById(Long id, UserDto dto) {
+        this.userRepository.updateUser(id, dto.getEmail(), dto.getUsername());
     }
 
     public void delete(User user) {

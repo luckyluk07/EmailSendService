@@ -1,5 +1,6 @@
 package com.example.emailsendservice.Config;
 
+import com.example.emailsendservice.Models.UserDto;
 import com.example.emailsendservice.Repositories.UserRepository;
 import com.example.emailsendservice.Models.User;
 import com.example.emailsendservice.Services.UserService;
@@ -27,22 +28,22 @@ public class DataInitializer {
         //second.user@gmail.com
         //third.user@gmail.com
         //fourth.user@gmail.com
-        User user1 = User.builder()
+        UserDto user1 = UserDto.builder()
                 .username("FirstUser")
                 .email("L.Nojman11@wp.pl")
                 .build();
 
-        User user2 = User.builder()
+        UserDto user2 = UserDto.builder()
                 .username("SecondUser")
                 .email("pio_wozniak@yahoo.com")
                 .build();
 
-        User user3 = User.builder()
+        UserDto user3 = UserDto.builder()
                 .username("ThirdUser")
                 .email("studniapl@gmail.com")
                 .build();
 
-        User user4 = User.builder()
+        UserDto user4 = UserDto.builder()
                 .username("FourthUser")
                 .email("lukasz.nojman07@gmail.com")
                 .build();

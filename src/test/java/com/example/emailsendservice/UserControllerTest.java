@@ -2,7 +2,9 @@ package com.example.emailsendservice;
 
 import com.example.emailsendservice.Controllers.UserController;
 import com.example.emailsendservice.Mappers.JsonMapper;
+import com.example.emailsendservice.Mappers.UserMapper;
 import com.example.emailsendservice.Models.User;
+import com.example.emailsendservice.Models.UserDto;
 import com.example.emailsendservice.Services.UserService;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
@@ -94,7 +96,6 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username", CoreMatchers.is(user1.getUsername())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is((int)user1.getId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(user1.getEmail())));
 
         Mockito.verify(userService,times(1)).findById(user1.getId());
@@ -114,16 +115,15 @@ public class UserControllerTest {
 
     @Test
     public void create_properUser_returnCreated() throws Exception {
-        User user = User.builder().username("user").email("gmail.com").build();
-        Mockito.when(userService.create(any())).thenReturn(user);
+        Mockito.when(userService.create(any(UserDto.class))).thenReturn(user1);
 
         mvc.perform(MockMvcRequestBuilders
                         .post("/api/users/")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonMapper.asJsonString(user)))
+                        .content(JsonMapper.asJsonString(UserMapper.userModelToUserDto(user1))))
                 .andExpect(status().isCreated());
 
-        Mockito.verify(userService,times(1)).create(any());
+        Mockito.verify(userService,times(1)).create(any(UserDto.class));
     }
 
     @Test

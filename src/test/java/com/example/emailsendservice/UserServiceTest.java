@@ -1,5 +1,6 @@
 package com.example.emailsendservice;
 
+import com.example.emailsendservice.Mappers.UserMapper;
 import com.example.emailsendservice.Models.User;
 import com.example.emailsendservice.Repositories.UserRepository;
 import com.example.emailsendservice.Services.UserService;
@@ -120,7 +121,7 @@ public class UserServiceTest {
     void updateById_existingUser_serviceCallRepositoryMethod() {
         Mockito.doNothing().when(userRepository).updateUser(anyLong(),anyString(),anyString());
 
-        this.userService.updateById(user1.getId(), user1);
+        this.userService.updateById(user1.getId(), UserMapper.userModelToUserDto(user1));
 
         Mockito.verify(userRepository, times(1)).updateUser(anyLong(),anyString(),anyString());
     }

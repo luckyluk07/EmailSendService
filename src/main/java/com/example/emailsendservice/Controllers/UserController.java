@@ -1,6 +1,8 @@
 package com.example.emailsendservice.Controllers;
 
+import com.example.emailsendservice.Mappers.UserMapper;
 import com.example.emailsendservice.Models.User;
+import com.example.emailsendservice.Models.UserDto;
 import com.example.emailsendservice.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -20,22 +23,26 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll() {
-        return ResponseEntity.ok(this.userService.findAll());
+    public ResponseEntity<List<UserDto>> findAll() {
+        return ResponseEntity.ok(this.userService.findAll()
+                .stream()
+                .map(UserMapper::userModelToUserDto)
+                .collect(Collectors
+                        .toList()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
+    public ResponseEntity<UserDto> findById(@PathVariable Long id) {
         User user = this.userService.findById(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(UserMapper.userModelToUserDto(user));
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody User user, UriComponentsBuilder builder) {
-        User createdUser = this.userService.create(user);
+    public ResponseEntity<Void> create(@RequestBody UserDto userDto, UriComponentsBuilder builder) {
+        User createdUser = this.userService.create(userDto);
         return ResponseEntity
                 .created(builder.pathSegment("api", "emails", "{id}")
                         .buildAndExpand(createdUser.getId())
@@ -44,7 +51,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateById(@PathVariable Long id, @RequestBody User updatedUser) {
+    public ResponseEntity<Void> updateById(@PathVariable Long id, @RequestBody UserDto updatedUser) {
         User user = this.userService.findById(id);
         if (user != null) {
             this.userService.updateById(id, updatedUser);
