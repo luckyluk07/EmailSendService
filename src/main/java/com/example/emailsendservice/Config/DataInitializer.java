@@ -2,6 +2,7 @@ package com.example.emailsendservice.Config;
 
 import com.example.emailsendservice.Repositories.UserRepository;
 import com.example.emailsendservice.Models.User;
+import com.example.emailsendservice.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -9,11 +10,11 @@ import javax.annotation.PostConstruct;
 
 @Component
 public class DataInitializer {
-    private UserRepository repository;
+    private UserService service;
 
     @Autowired
-    public DataInitializer(UserRepository repository) {
-        this.repository = repository;
+    public DataInitializer(UserService service) {
+        this.service = service;
     }
 
     @PostConstruct
@@ -46,9 +47,9 @@ public class DataInitializer {
                 .email("lukasz.nojman07@gmail.com")
                 .build();
 
-        this.repository.save(user1);
-        this.repository.save(user2);
-        this.repository.save(user3);
-        this.repository.save(user4);
+        this.service.create(user1);
+        this.service.create(user2);
+        this.service.create(user3);
+        this.service.create(user4);
     }
 }
