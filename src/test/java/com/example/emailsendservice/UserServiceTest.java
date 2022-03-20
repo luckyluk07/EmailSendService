@@ -16,8 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,7 +68,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void givenUserToAddShouldReturnAddedUser(){
+    void create_AddProperUser_ReturnAddedUser(){
         Mockito.when(userRepository.save(any())).thenReturn(user1);
         this.userService.create(user1);
 
@@ -75,11 +76,33 @@ public class UserServiceTest {
     }
 
     @Test
-    void givenGetAllUsersShouldReturnAllUsers() {
+    void findAll_3ProperUsers_ReturnAllUsers() {
         Mockito.when(userRepository.findAll()).thenReturn(users);
         List<User> serviceUsers = this.userService.findAll();
         Assertions.assertEquals(users, serviceUsers);
         Mockito.verify(userRepository,times(1)).findAll();
+    }
+
+    @Test
+    void findById_NoUserWithThatId_ReturnNull() {
+        Optional<User> user = Optional.empty();
+        Mockito.when(userRepository.findById(anyLong())).thenReturn(user);
+
+        User fetchedUser = this.userService.findById(1L);
+
+        Assertions.assertNull(fetchedUser);
+        Mockito.verify(userRepository,times(1)).findById(anyLong());
+    }
+
+    @Test
+    void findById_UserWithThatIdExist_ReturnThisUser() {
+        Optional<User> user = Optional.ofNullable(user1);
+        Mockito.when(userRepository.findById(anyLong())).thenReturn(user);
+
+        User fetchedUser = this.userService.findById(1L);
+
+        Assertions.assertEquals(user1, fetchedUser);
+        Mockito.verify(userRepository,times(1)).findById(anyLong());
     }
 
 }
