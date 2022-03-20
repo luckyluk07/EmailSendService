@@ -4,7 +4,6 @@ import com.example.emailsendservice.Models.EmailDto;
 import com.example.emailsendservice.Models.User;
 import com.example.emailsendservice.Repositories.UserRepository;
 import com.example.emailsendservice.Services.EmailService;
-import com.example.emailsendservice.Services.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

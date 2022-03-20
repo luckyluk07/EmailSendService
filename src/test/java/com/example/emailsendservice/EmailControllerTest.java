@@ -1,23 +1,18 @@
 package com.example.emailsendservice;
 
 import com.example.emailsendservice.Controllers.EmailController;
-import com.example.emailsendservice.Controllers.UserController;
 import com.example.emailsendservice.Mappers.JsonMapper;
 import com.example.emailsendservice.Models.EmailDto;
 import com.example.emailsendservice.Models.User;
-import com.example.emailsendservice.Repositories.UserRepository;
 import com.example.emailsendservice.Services.EmailService;
 import com.example.emailsendservice.Services.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,6 +45,9 @@ public class EmailControllerTest {
     private User user2;
     private User user3;
     private List<EmailDto> emails;
+    private EmailDto email1;
+    private EmailDto email2;
+    private EmailDto email3;
 
     @BeforeEach
     public void init() {
@@ -77,15 +75,21 @@ public class EmailControllerTest {
         this.users.add(user2);
         this.users.add(user3);
 
-        this.emails.add(new EmailDto(user1.getEmail()));
-        this.emails.add(new EmailDto(user2.getEmail()));
-        this.emails.add(new EmailDto(user3.getEmail()));
+        this.email1 = new EmailDto(user1.getEmail());
+        this.email2 = new EmailDto(user2.getEmail());
+        this.email3 = new EmailDto(user3.getEmail());
+
+        this.emails.add(email1);
+        this.emails.add(email2);
+        this.emails.add(email3);
     }
 
     @AfterEach
     public void tearDown() {
+        email1 = email2 = email3 = null;
         user1 = user2 = user3 = null;
         users = null;
+        emails = null;
     }
 
     @Test
@@ -127,33 +131,33 @@ public class EmailControllerTest {
         Mockito.verify(emailService,times(1)).findById(anyLong());
     }
 
-//    @Test
-//    public void updateById_userExist_returnAcceptedServiceWillUpdate() throws Exception {
-//        Mockito.when(userService.findById(anyLong())).thenReturn(user1);
-//        Mockito.doNothing().when(userService).updateById(anyLong(),any());
-//
-//        mvc.perform(MockMvcRequestBuilders
-//                        .put("/api/emails/1/")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(JsonMapper.asJsonString(user1)))
-//                .andExpect(status().isAccepted());
-//
-//        Mockito.verify(userService,times(1)).findById(anyLong());
-//        Mockito.verify(userService,times(1)).updateById(anyLong(), any());
-//    }
-//
-//    @Test
-//    public void updateById_userNotExist_returnNotFoundServiceWillNotUpdate() throws Exception {
-//        Mockito.when(userService.findById(anyLong())).thenReturn(null);
-//        Mockito.doNothing().when(userService).updateById(anyLong(),any());
-//
-//        mvc.perform(MockMvcRequestBuilders
-//                        .put("/api/emails/4/")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(JsonMapper.asJsonString(user1)))
-//                .andExpect(status().isNotFound());
-//
-//        Mockito.verify(userService,times(1)).findById(anyLong());
-//        Mockito.verify(userService,times(0)).updateById(anyLong(), any());
-//    }
+    @Test
+    public void updateById_userExist_returnAcceptedServiceWillUpdate() throws Exception {
+        Mockito.when(userService.findById(anyLong())).thenReturn(user1);
+        Mockito.doNothing().when(emailService).updateEmail(anyLong(),any());
+
+        mvc.perform(MockMvcRequestBuilders
+                        .put("/api/emails/1/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonMapper.asJsonString(email3)))
+                .andExpect(status().isAccepted());
+
+        Mockito.verify(userService,times(1)).findById(anyLong());
+        Mockito.verify(emailService,times(1)).updateEmail(anyLong(), any());
+    }
+
+    @Test
+    public void updateById_userNotExist_returnNotFoundServiceWillNotUpdate() throws Exception {
+        Mockito.when(userService.findById(anyLong())).thenReturn(null);
+        Mockito.doNothing().when(emailService).updateEmail(anyLong(),any());
+
+        mvc.perform(MockMvcRequestBuilders
+                        .put("/api/emails/4/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonMapper.asJsonString(email3)))
+                .andExpect(status().isNotFound());
+
+        Mockito.verify(userService,times(1)).findById(anyLong());
+        Mockito.verify(emailService,times(0)).updateEmail(anyLong(), any());
+    }
 }

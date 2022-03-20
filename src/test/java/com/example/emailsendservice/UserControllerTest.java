@@ -2,7 +2,6 @@ package com.example.emailsendservice;
 
 import com.example.emailsendservice.Controllers.UserController;
 import com.example.emailsendservice.Mappers.JsonMapper;
-import com.example.emailsendservice.Models.EmailDto;
 import com.example.emailsendservice.Models.User;
 import com.example.emailsendservice.Services.UserService;
 import org.hamcrest.CoreMatchers;
