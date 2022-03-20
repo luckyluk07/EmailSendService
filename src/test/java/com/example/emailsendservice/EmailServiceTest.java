@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
@@ -104,5 +105,14 @@ public class EmailServiceTest {
 
         Assertions.assertEquals(user1.getEmail(), fetchedEmail.getEmail());
         Mockito.verify(userRepository,times(1)).findById(anyLong());
+    }
+
+    @Test
+    void updateById_emailBelongsToExistingUser_serviceCallRepositoryMethod() {
+        Mockito.doNothing().when(userRepository).updateEmail(anyLong(),anyString());
+
+        this.emailService.updateEmail(user1.getId(), EmailDto.builder().email(user1.getEmail()).build());
+
+        Mockito.verify(userRepository, times(1)).updateEmail(anyLong(),anyString());
     }
 }
