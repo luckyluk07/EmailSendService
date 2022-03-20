@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,7 @@ public class UserServiceTest {
     void findAll_3ProperUsers_ReturnAllUsers() {
         Mockito.when(userRepository.findAll()).thenReturn(users);
         List<User> serviceUsers = this.userService.findAll();
+
         Assertions.assertEquals(users, serviceUsers);
         Mockito.verify(userRepository,times(1)).findAll();
     }
@@ -103,6 +105,15 @@ public class UserServiceTest {
 
         Assertions.assertEquals(user1, fetchedUser);
         Mockito.verify(userRepository,times(1)).findById(anyLong());
+    }
+
+    @Test
+    void delete_ExistingUser_DeleteUserFromRepository() {
+        Mockito.doNothing().when(userRepository).delete(any());
+
+        this.userService.delete(user1);
+
+        Mockito.verify(userRepository, times(1)).delete(any());
     }
 
 }
