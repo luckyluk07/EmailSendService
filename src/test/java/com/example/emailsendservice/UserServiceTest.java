@@ -69,7 +69,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void create_AddProperUser_ReturnAddedUser(){
+    void create_addProperUser_returnAddedUser(){
         Mockito.when(userRepository.save(any())).thenReturn(user1);
         User user = this.userService.create(user1);
 
@@ -78,7 +78,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findAll_3ProperUsers_ReturnAllUsers() {
+    void findAll_3ProperUsers_returnAllUsers() {
         Mockito.when(userRepository.findAll()).thenReturn(users);
         List<User> serviceUsers = this.userService.findAll();
 
@@ -87,7 +87,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findById_NoUserWithThatId_ReturnNull() {
+    void findById_noUserWithThatId_returnNull() {
         Optional<User> user = Optional.empty();
         Mockito.when(userRepository.findById(anyLong())).thenReturn(user);
 
@@ -98,7 +98,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findById_UserWithThatIdExist_ReturnThisUser() {
+    void findById_userWithThatIdExist_returnThisUser() {
         Optional<User> user = Optional.ofNullable(user1);
         Mockito.when(userRepository.findById(anyLong())).thenReturn(user);
 
@@ -109,7 +109,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void delete_ExistingUser_ServiceCallRepositoryMethod() {
+    void delete_existingUser_serviceCallRepositoryMethod() {
         Mockito.doNothing().when(userRepository).delete(any());
 
         this.userService.delete(user1);

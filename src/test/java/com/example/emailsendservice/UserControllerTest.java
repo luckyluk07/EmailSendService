@@ -1,8 +1,10 @@
 package com.example.emailsendservice;
 
 import com.example.emailsendservice.Controllers.UserController;
+import com.example.emailsendservice.Mappers.JsonMapper;
 import com.example.emailsendservice.Models.User;
 import com.example.emailsendservice.Services.UserService;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,11 +15,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserController.class)
@@ -26,7 +32,7 @@ public class UserControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private UserService service;
+    private UserService userService;
 
     private List<User> users;
     private User user1;
@@ -66,24 +72,57 @@ public class UserControllerTest {
     }
 
     @Test
-    public void givenEmployees_whenGetEmployees_thenReturnJsonArray()
+    public void findAll_3ProperUsers_returnOkCodeAndJsonArray()
             throws Exception {
 
-        Mockito.when(service.findAll()).thenReturn(users);
+        Mockito.when(userService.findAll()).thenReturn(users);
 
         mvc.perform(MockMvcRequestBuilders.get("/api/users")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)));
+
+        Mockito.verify(userService,times(1)).findAll();
     }
 
     @Test
-    public void findById_UsersExist_ReturnOkAndUser() throws Exception {
-        Mockito.when(service.findById(user1.getId())).thenReturn(user1);
+    public void findById_userExist_returnOkAndUser() throws Exception {
+        Mockito.when(userService.findById(user1.getId())).thenReturn(user1);
 
         mvc.perform(MockMvcRequestBuilders
                         .get("/api/users/1/")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.username", CoreMatchers.is(user1.getUsername())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is((int)user1.getId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(user1.getEmail())));
+
+        Mockito.verify(userService,times(1)).findById(user1.getId());
+    }
+
+    @Test
+    public void findById_userNotExist_returnNotFound() throws Exception {
+        Mockito.when(userService.findById(anyLong())).thenReturn(null);
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/api/users/4/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        Mockito.verify(userService,times(1)).findById(anyLong());
+    }
+
+    @Test
+    public void create_properUser_returnCreated() throws Exception {
+        User user = User.builder().username("user").email("gmail.com").build();
+        Mockito.when(userService.create(any())).thenReturn(user);
+
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/api/users/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonMapper.asJsonString(user)))
+                .andExpect(status().isCreated());
+
+        Mockito.verify(userService,times(1)).create(any());
     }
 }
