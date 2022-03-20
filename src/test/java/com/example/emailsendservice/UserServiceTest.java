@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -39,19 +40,19 @@ public class UserServiceTest {
     @BeforeEach
     public void init() {
         users = new ArrayList<>();
-        User user1 = User.builder()
+        this.user1 = User.builder()
                 .id(1)
                 .username("FirstUser")
                 .email("first.user@gmail.com")
                 .build();
 
-        User user2 = User.builder()
+        this.user2 = User.builder()
                 .id(2)
                 .username("SecondUser")
                 .email("second.user@gmail.com")
                 .build();
 
-        User user3 = User.builder()
+        this.user3 = User.builder()
                 .id(3)
                 .username("ThirdUser")
                 .email("third.user@gmail.com")
@@ -117,13 +118,13 @@ public class UserServiceTest {
         Mockito.verify(userRepository, times(1)).delete(any());
     }
 
-//    @Test
-//    void updateById_ExistingUser_ServiceCallRepositoryMethod() {
-//        Mockito.doNothing().when(userRepository).updateUser(anyLong(),anyString(),anyString());
-//
-//        this.userService.updateById(user1.getId(), user1);
-//
-//        Mockito.verify(userRepository, times(1)).updateUser(anyLong(),anyString(),anyString());
-//    }
+    @Test
+    void updateById_existingUser_serviceCallRepositoryMethod() {
+        Mockito.doNothing().when(userRepository).updateUser(anyLong(),anyString(),anyString());
+
+        this.userService.updateById(user1.getId(), user1);
+
+        Mockito.verify(userRepository, times(1)).updateUser(anyLong(),anyString(),anyString());
+    }
 
 }
