@@ -125,4 +125,34 @@ public class UserControllerTest {
 
         Mockito.verify(userService,times(1)).create(any());
     }
+
+    @Test
+    public void updateById_userExist_returnAcceptedServiceWillUpdate() throws Exception {
+        Mockito.when(userService.findById(anyLong())).thenReturn(user1);
+        Mockito.doNothing().when(userService).updateById(anyLong(),any());
+
+        mvc.perform(MockMvcRequestBuilders
+                        .put("/api/users/1/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonMapper.asJsonString(user1)))
+                .andExpect(status().isAccepted());
+
+        Mockito.verify(userService,times(1)).findById(anyLong());
+        Mockito.verify(userService,times(1)).updateById(anyLong(), any());
+    }
+
+    @Test
+    public void updateById_userNotExist_returnNotFoundServiceWillNotUpdate() throws Exception {
+        Mockito.when(userService.findById(anyLong())).thenReturn(null);
+        Mockito.doNothing().when(userService).updateById(anyLong(),any());
+
+        mvc.perform(MockMvcRequestBuilders
+                        .put("/api/users/4/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonMapper.asJsonString(user1)))
+                .andExpect(status().isNotFound());
+
+        Mockito.verify(userService,times(1)).findById(anyLong());
+        Mockito.verify(userService,times(0)).updateById(anyLong(), any());
+    }
 }
