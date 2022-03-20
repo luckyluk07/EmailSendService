@@ -1,32 +1,60 @@
 package com.example.emailsendservice;
 
+import com.example.emailsendservice.Controllers.EmailController;
+import com.example.emailsendservice.Controllers.UserController;
+import com.example.emailsendservice.Mappers.JsonMapper;
+import com.example.emailsendservice.Models.EmailDto;
 import com.example.emailsendservice.Models.User;
 import com.example.emailsendservice.Repositories.UserRepository;
+import com.example.emailsendservice.Services.EmailService;
+import com.example.emailsendservice.Services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.*;
 
-@AutoConfigureMockMvc
-@SpringBootTest
+@WebMvcTest(EmailController.class)
 public class EmailControllerTest {
-    private MockMvc mockMvc;
-    private ObjectMapper mapper;
-    private User user1, user2, user3;
     @Autowired
-    public EmailControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.mapper = objectMapper;
+    private MockMvc mvc;
+
+    @MockBean
+    private UserService userService;
+
+    @MockBean
+    private EmailService emailService;
+
+    private List<User> users;
+    private User user1;
+    private User user2;
+    private User user3;
+    private List<EmailDto> emails;
+
+    @BeforeEach
+    public void init() {
+        this.users = new ArrayList<>();
+        this.emails = new ArrayList<>();
         this.user1 = User.builder()
                 .id(1)
                 .username("FirstUser")
@@ -44,20 +72,90 @@ public class EmailControllerTest {
                 .username("ThirdUser")
                 .email("third.user@gmail.com")
                 .build();
+
+        this.users.add(user1);
+        this.users.add(user2);
+        this.users.add(user3);
+
+        this.emails.add(new EmailDto(user1.getEmail()));
+        this.emails.add(new EmailDto(user2.getEmail()));
+        this.emails.add(new EmailDto(user3.getEmail()));
     }
 
-    @MockBean
-    UserRepository userRepository;
+    @AfterEach
+    public void tearDown() {
+        user1 = user2 = user3 = null;
+        users = null;
+    }
 
     @Test
-    public void getUserById_success() throws Exception {
-        Mockito.when(userRepository.findById(user1.getId())).thenReturn(java.util.Optional.of(user1));
+    public void findAll_3ProperUsersWithEmails_returnOkCodeAndJsonArray()
+            throws Exception {
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/api/emails/1")
-                .contentType(MediaType.APPLICATION_JSON))
+        Mockito.when(emailService.findAll()).thenReturn(emails);
+
+        mvc.perform(MockMvcRequestBuilders.get("/api/emails")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()));
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        Mockito.verify(userService,times(1)).findAll();
     }
 
+//    @Test
+//    public void findById_userExist_returnOkAndUser() throws Exception {
+//        Mockito.when(userService.findById(user1.getId())).thenReturn(user1);
+//
+//        mvc.perform(MockMvcRequestBuilders
+//                        .get("/api/users/1/")
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.username", CoreMatchers.is(user1.getUsername())))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is((int)user1.getId())))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(user1.getEmail())));
+//
+//        Mockito.verify(userService,times(1)).findById(user1.getId());
+//    }
+//
+//    @Test
+//    public void findById_userNotExist_returnNotFound() throws Exception {
+//        Mockito.when(userService.findById(anyLong())).thenReturn(null);
+//
+//        mvc.perform(MockMvcRequestBuilders
+//                        .get("/api/users/4/")
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isNotFound());
+//
+//        Mockito.verify(userService,times(1)).findById(anyLong());
+//    }
+//
+//    @Test
+//    public void updateById_userExist_returnAcceptedServiceWillUpdate() throws Exception {
+//        Mockito.when(userService.findById(anyLong())).thenReturn(user1);
+//        Mockito.doNothing().when(userService).updateById(anyLong(),any());
+//
+//        mvc.perform(MockMvcRequestBuilders
+//                        .put("/api/users/1/")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(JsonMapper.asJsonString(user1)))
+//                .andExpect(status().isAccepted());
+//
+//        Mockito.verify(userService,times(1)).findById(anyLong());
+//        Mockito.verify(userService,times(1)).updateById(anyLong(), any());
+//    }
+//
+//    @Test
+//    public void updateById_userNotExist_returnNotFoundServiceWillNotUpdate() throws Exception {
+//        Mockito.when(userService.findById(anyLong())).thenReturn(null);
+//        Mockito.doNothing().when(userService).updateById(anyLong(),any());
+//
+//        mvc.perform(MockMvcRequestBuilders
+//                        .put("/api/users/4/")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(JsonMapper.asJsonString(user1)))
+//                .andExpect(status().isNotFound());
+//
+//        Mockito.verify(userService,times(1)).findById(anyLong());
+//        Mockito.verify(userService,times(0)).updateById(anyLong(), any());
+//    }
 }
