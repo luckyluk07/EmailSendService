@@ -1,8 +1,6 @@
 package com.example.emailsendservice.Config;
 
 import com.example.emailsendservice.Models.UserDto;
-import com.example.emailsendservice.Repositories.UserRepository;
-import com.example.emailsendservice.Models.User;
 import com.example.emailsendservice.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -39,7 +39,7 @@ public class EmailSenderControllerTest {
                                 .build())))
                 .andExpect(status().isOk());
 
-        Mockito.verify(emailSenderService,times(1)).sendSimpleMessage(anyLong(), any());
+        Mockito.verify(emailSenderService, times(1)).sendSimpleMessage(anyLong(), any());
     }
 
     @Test
@@ -50,12 +50,12 @@ public class EmailSenderControllerTest {
                         .get("/api/sendmail/4/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonMapper.asJsonString(MailMessage.builder()
-                .subject("subject")
-                .mainContent("content")
-                .build())))
+                                .subject("subject")
+                                .mainContent("content")
+                                .build())))
                 .andExpect(status().isNotFound());
 
-        Mockito.verify(emailSenderService,times(1)).sendSimpleMessage(anyLong(), any());
+        Mockito.verify(emailSenderService, times(1)).sendSimpleMessage(anyLong(), any());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class EmailSenderControllerTest {
                                 .build())))
                 .andExpect(status().isOk());
 
-        Mockito.verify(emailSenderService,times(1)).sendToAll(any());
+        Mockito.verify(emailSenderService, times(1)).sendToAll(any());
     }
 
 }

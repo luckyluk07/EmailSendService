@@ -103,7 +103,7 @@ public class EmailControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)));
 
-        Mockito.verify(emailService,times(1)).findAll();
+        Mockito.verify(emailService, times(1)).findAll();
     }
 
     @Test
@@ -116,7 +116,7 @@ public class EmailControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(user1.getEmail())));
 
-        Mockito.verify(emailService,times(1)).findById(user1.getId());
+        Mockito.verify(emailService, times(1)).findById(user1.getId());
     }
 
     @Test
@@ -128,13 +128,13 @@ public class EmailControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
-        Mockito.verify(emailService,times(1)).findById(anyLong());
+        Mockito.verify(emailService, times(1)).findById(anyLong());
     }
 
     @Test
     public void updateById_userExist_returnAcceptedServiceWillUpdate() throws Exception {
         Mockito.when(userService.findById(anyLong())).thenReturn(user1);
-        Mockito.doNothing().when(emailService).updateEmail(anyLong(),any());
+        Mockito.doNothing().when(emailService).updateEmail(anyLong(), any());
 
         mvc.perform(MockMvcRequestBuilders
                         .put("/api/emails/1/")
@@ -142,14 +142,14 @@ public class EmailControllerTest {
                         .content(JsonMapper.asJsonString(email3)))
                 .andExpect(status().isAccepted());
 
-        Mockito.verify(userService,times(1)).findById(anyLong());
-        Mockito.verify(emailService,times(1)).updateEmail(anyLong(), any());
+        Mockito.verify(userService, times(1)).findById(anyLong());
+        Mockito.verify(emailService, times(1)).updateEmail(anyLong(), any());
     }
 
     @Test
     public void updateById_userNotExist_returnNotFoundServiceWillNotUpdate() throws Exception {
         Mockito.when(userService.findById(anyLong())).thenReturn(null);
-        Mockito.doNothing().when(emailService).updateEmail(anyLong(),any());
+        Mockito.doNothing().when(emailService).updateEmail(anyLong(), any());
 
         mvc.perform(MockMvcRequestBuilders
                         .put("/api/emails/4/")
@@ -157,7 +157,7 @@ public class EmailControllerTest {
                         .content(JsonMapper.asJsonString(email3)))
                 .andExpect(status().isNotFound());
 
-        Mockito.verify(userService,times(1)).findById(anyLong());
-        Mockito.verify(emailService,times(0)).updateEmail(anyLong(), any());
+        Mockito.verify(userService, times(1)).findById(anyLong());
+        Mockito.verify(emailService, times(0)).updateEmail(anyLong(), any());
     }
 }

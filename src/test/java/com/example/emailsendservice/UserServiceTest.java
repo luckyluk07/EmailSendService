@@ -69,12 +69,12 @@ public class UserServiceTest {
     }
 
     @Test
-    void create_addProperUser_returnAddedUser(){
+    void create_addProperUser_returnAddedUser() {
         Mockito.when(userRepository.save(any())).thenReturn(user1);
         User user = this.userService.create(user1);
 
         Assertions.assertEquals(user1, user);
-        Mockito.verify(userRepository,times(1)).save(user1);
+        Mockito.verify(userRepository, times(1)).save(user1);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class UserServiceTest {
         List<User> serviceUsers = this.userService.findAll();
 
         Assertions.assertEquals(users, serviceUsers);
-        Mockito.verify(userRepository,times(1)).findAll();
+        Mockito.verify(userRepository, times(1)).findAll();
     }
 
     @Test
@@ -94,7 +94,7 @@ public class UserServiceTest {
         User fetchedUser = this.userService.findById(1L);
 
         Assertions.assertNull(fetchedUser);
-        Mockito.verify(userRepository,times(1)).findById(anyLong());
+        Mockito.verify(userRepository, times(1)).findById(anyLong());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class UserServiceTest {
         User fetchedUser = this.userService.findById(1L);
 
         Assertions.assertEquals(user1, fetchedUser);
-        Mockito.verify(userRepository,times(1)).findById(anyLong());
+        Mockito.verify(userRepository, times(1)).findById(anyLong());
     }
 
     @Test
@@ -119,11 +119,11 @@ public class UserServiceTest {
 
     @Test
     void updateById_existingUser_serviceCallRepositoryMethod() {
-        Mockito.doNothing().when(userRepository).updateUser(anyLong(),anyString(),anyString());
+        Mockito.doNothing().when(userRepository).updateUser(anyLong(), anyString(), anyString());
 
         this.userService.updateById(user1.getId(), UserMapper.userModelToUserDto(user1));
 
-        Mockito.verify(userRepository, times(1)).updateUser(anyLong(),anyString(),anyString());
+        Mockito.verify(userRepository, times(1)).updateUser(anyLong(), anyString(), anyString());
     }
 
 }

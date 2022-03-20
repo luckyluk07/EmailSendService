@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 public class EmailSenderController {
@@ -18,15 +20,15 @@ public class EmailSenderController {
     }
 
     @GetMapping("/sendmail/{id}")
-    public ResponseEntity<Void> sendEmail(@PathVariable Long id, @RequestBody MailMessage message) {
-        if(!this.emailSenderService.sendSimpleMessage(id,message)) {
+    public ResponseEntity<Void> sendEmail(@PathVariable Long id, @Valid @RequestBody MailMessage message) {
+        if (!this.emailSenderService.sendSimpleMessage(id, message)) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/sendToAll")
-    public ResponseEntity<Void> sendEmailToAll(@RequestBody MailMessage message) {
+    public ResponseEntity<Void> sendEmailToAll(@Valid @RequestBody MailMessage message) {
         this.emailSenderService.sendToAll(message);
         return ResponseEntity.ok().build();
     }

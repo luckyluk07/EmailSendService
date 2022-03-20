@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody UserDto userDto, UriComponentsBuilder builder) {
+    public ResponseEntity<Void> create(@Valid @RequestBody UserDto userDto, UriComponentsBuilder builder) {
         User createdUser = this.userService.create(userDto);
         return ResponseEntity
                 .created(builder.pathSegment("api", "emails", "{id}")
@@ -51,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateById(@PathVariable Long id, @RequestBody UserDto updatedUser) {
+    public ResponseEntity<Void> updateById(@PathVariable Long id, @Valid @RequestBody UserDto updatedUser) {
         User user = this.userService.findById(id);
         if (user != null) {
             this.userService.updateById(id, updatedUser);

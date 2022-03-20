@@ -84,7 +84,7 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)));
 
-        Mockito.verify(userService,times(1)).findAll();
+        Mockito.verify(userService, times(1)).findAll();
     }
 
     @Test
@@ -98,7 +98,7 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username", CoreMatchers.is(user1.getUsername())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(user1.getEmail())));
 
-        Mockito.verify(userService,times(1)).findById(user1.getId());
+        Mockito.verify(userService, times(1)).findById(user1.getId());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
-        Mockito.verify(userService,times(1)).findById(anyLong());
+        Mockito.verify(userService, times(1)).findById(anyLong());
     }
 
     @Test
@@ -123,13 +123,13 @@ public class UserControllerTest {
                         .content(JsonMapper.asJsonString(UserMapper.userModelToUserDto(user1))))
                 .andExpect(status().isCreated());
 
-        Mockito.verify(userService,times(1)).create(any(UserDto.class));
+        Mockito.verify(userService, times(1)).create(any(UserDto.class));
     }
 
     @Test
     public void updateById_userExist_returnAcceptedServiceWillUpdate() throws Exception {
         Mockito.when(userService.findById(anyLong())).thenReturn(user1);
-        Mockito.doNothing().when(userService).updateById(anyLong(),any());
+        Mockito.doNothing().when(userService).updateById(anyLong(), any());
 
         mvc.perform(MockMvcRequestBuilders
                         .put("/api/users/1/")
@@ -137,14 +137,14 @@ public class UserControllerTest {
                         .content(JsonMapper.asJsonString(user1)))
                 .andExpect(status().isAccepted());
 
-        Mockito.verify(userService,times(1)).findById(anyLong());
-        Mockito.verify(userService,times(1)).updateById(anyLong(), any());
+        Mockito.verify(userService, times(1)).findById(anyLong());
+        Mockito.verify(userService, times(1)).updateById(anyLong(), any());
     }
 
     @Test
     public void updateById_userNotExist_returnNotFoundServiceWillNotUpdate() throws Exception {
         Mockito.when(userService.findById(anyLong())).thenReturn(null);
-        Mockito.doNothing().when(userService).updateById(anyLong(),any());
+        Mockito.doNothing().when(userService).updateById(anyLong(), any());
 
         mvc.perform(MockMvcRequestBuilders
                         .put("/api/users/4/")
@@ -152,8 +152,8 @@ public class UserControllerTest {
                         .content(JsonMapper.asJsonString(user1)))
                 .andExpect(status().isNotFound());
 
-        Mockito.verify(userService,times(1)).findById(anyLong());
-        Mockito.verify(userService,times(0)).updateById(anyLong(), any());
+        Mockito.verify(userService, times(1)).findById(anyLong());
+        Mockito.verify(userService, times(0)).updateById(anyLong(), any());
     }
 
     @Test
@@ -166,8 +166,8 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
 
-        Mockito.verify(userService,times(1)).findById(anyLong());
-        Mockito.verify(userService,times(1)).delete(any());
+        Mockito.verify(userService, times(1)).findById(anyLong());
+        Mockito.verify(userService, times(1)).delete(any());
     }
 
     @Test
@@ -180,7 +180,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
-        Mockito.verify(userService,times(1)).findById(anyLong());
-        Mockito.verify(userService,times(0)).delete(any());
+        Mockito.verify(userService, times(1)).findById(anyLong());
+        Mockito.verify(userService, times(0)).delete(any());
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,7 @@ public class EmailController {
 
     @GetMapping
     public ResponseEntity<List<EmailDto>> findAll() {
-        List<EmailDto> emails =  this.emailService.findAll();
+        List<EmailDto> emails = this.emailService.findAll();
         return ResponseEntity.ok(emails);
     }
 
@@ -39,7 +40,7 @@ public class EmailController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateEmail(@PathVariable Long id, @RequestBody EmailDto dto) {
+    public ResponseEntity<Void> updateEmail(@PathVariable Long id, @Valid @RequestBody EmailDto dto) {
         User user = this.userService.findById(id);
         if (user != null) {
             this.emailService.updateEmail(id, dto);
@@ -47,5 +48,4 @@ public class EmailController {
         }
         return ResponseEntity.notFound().build();
     }
-
 }

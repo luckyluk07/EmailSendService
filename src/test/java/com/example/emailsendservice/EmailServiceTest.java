@@ -81,7 +81,7 @@ public class EmailServiceTest {
         List<EmailDto> serviceEmails = this.emailService.findAll();
 
         Assertions.assertEquals(emails, serviceEmails);
-        Mockito.verify(userRepository,times(1)).findAll();
+        Mockito.verify(userRepository, times(1)).findAll();
     }
 
     @Test
@@ -92,7 +92,7 @@ public class EmailServiceTest {
         EmailDto fetchedEmail = this.emailService.findById(1L);
 
         Assertions.assertNull(fetchedEmail);
-        Mockito.verify(userRepository,times(1)).findById(anyLong());
+        Mockito.verify(userRepository, times(1)).findById(anyLong());
     }
 
     @Test
@@ -103,15 +103,15 @@ public class EmailServiceTest {
         EmailDto fetchedEmail = this.emailService.findById(1L);
 
         Assertions.assertEquals(user1.getEmail(), fetchedEmail.getEmail());
-        Mockito.verify(userRepository,times(1)).findById(anyLong());
+        Mockito.verify(userRepository, times(1)).findById(anyLong());
     }
 
     @Test
     void updateById_emailBelongsToExistingUser_serviceCallRepositoryMethod() {
-        Mockito.doNothing().when(userRepository).updateEmail(anyLong(),anyString());
+        Mockito.doNothing().when(userRepository).updateEmail(anyLong(), anyString());
 
         this.emailService.updateEmail(user1.getId(), EmailDto.builder().email(user1.getEmail()).build());
 
-        Mockito.verify(userRepository, times(1)).updateEmail(anyLong(),anyString());
+        Mockito.verify(userRepository, times(1)).updateEmail(anyLong(), anyString());
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class EmailSenderService{
+public class EmailSenderService {
 
     private JavaMailSender emailSender;
     private UserRepository userRepository;
@@ -36,7 +36,7 @@ public class EmailSenderService{
         if (user.isEmpty()) {
             return false;
         }
-        sendSimpleMessage(user.get().getEmail(),messageToSend);
+        sendSimpleMessage(user.get().getEmail(), messageToSend);
         return true;
     }
 
