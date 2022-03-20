@@ -36,12 +36,7 @@ public class EmailSenderService{
         if (user.isEmpty()) {
             return false;
         }
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("lukasznojman65@gmail.com");
-        message.setTo(user.get().getEmail());
-        message.setSubject(messageToSend.getSubject());
-        message.setText(messageToSend.getMainContent());
-        emailSender.send(message);
+        sendSimpleMessage(user.get().getEmail(),messageToSend);
         return true;
     }
 
