@@ -71,8 +71,9 @@ public class UserServiceTest {
     @Test
     void create_AddProperUser_ReturnAddedUser(){
         Mockito.when(userRepository.save(any())).thenReturn(user1);
-        this.userService.create(user1);
+        User user = this.userService.create(user1);
 
+        Assertions.assertEquals(user1, user);
         Mockito.verify(userRepository,times(1)).save(user1);
     }
 
@@ -108,12 +109,21 @@ public class UserServiceTest {
     }
 
     @Test
-    void delete_ExistingUser_DeleteUserFromRepository() {
+    void delete_ExistingUser_ServiceCallRepositoryMethod() {
         Mockito.doNothing().when(userRepository).delete(any());
 
         this.userService.delete(user1);
 
         Mockito.verify(userRepository, times(1)).delete(any());
     }
+
+//    @Test
+//    void updateById_ExistingUser_ServiceCallRepositoryMethod() {
+//        Mockito.doNothing().when(userRepository).updateUser(anyLong(),anyString(),anyString());
+//
+//        this.userService.updateById(user1.getId(), user1);
+//
+//        Mockito.verify(userRepository, times(1)).updateUser(anyLong(),anyString(),anyString());
+//    }
 
 }
