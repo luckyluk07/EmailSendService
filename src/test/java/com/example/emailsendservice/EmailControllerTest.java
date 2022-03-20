@@ -99,43 +99,41 @@ public class EmailControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)));
 
-        Mockito.verify(userService,times(1)).findAll();
+        Mockito.verify(emailService,times(1)).findAll();
     }
 
-//    @Test
-//    public void findById_userExist_returnOkAndUser() throws Exception {
-//        Mockito.when(userService.findById(user1.getId())).thenReturn(user1);
-//
-//        mvc.perform(MockMvcRequestBuilders
-//                        .get("/api/users/1/")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.username", CoreMatchers.is(user1.getUsername())))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is((int)user1.getId())))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(user1.getEmail())));
-//
-//        Mockito.verify(userService,times(1)).findById(user1.getId());
-//    }
-//
-//    @Test
-//    public void findById_userNotExist_returnNotFound() throws Exception {
-//        Mockito.when(userService.findById(anyLong())).thenReturn(null);
-//
-//        mvc.perform(MockMvcRequestBuilders
-//                        .get("/api/users/4/")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound());
-//
-//        Mockito.verify(userService,times(1)).findById(anyLong());
-//    }
-//
+    @Test
+    public void findById_emailBelongsToExistingUser_returnOkAndEmail() throws Exception {
+        Mockito.when(emailService.findById(user1.getId())).thenReturn(EmailDto.builder().email(user1.getEmail()).build());
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/api/emails/1/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(user1.getEmail())));
+
+        Mockito.verify(emailService,times(1)).findById(user1.getId());
+    }
+
+    @Test
+    public void findById_emailNotBelongsToExistingUser_returnNotFound() throws Exception {
+        Mockito.when(emailService.findById(anyLong())).thenReturn(null);
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/api/emails/4/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        Mockito.verify(emailService,times(1)).findById(anyLong());
+    }
+
 //    @Test
 //    public void updateById_userExist_returnAcceptedServiceWillUpdate() throws Exception {
 //        Mockito.when(userService.findById(anyLong())).thenReturn(user1);
 //        Mockito.doNothing().when(userService).updateById(anyLong(),any());
 //
 //        mvc.perform(MockMvcRequestBuilders
-//                        .put("/api/users/1/")
+//                        .put("/api/emails/1/")
 //                        .contentType(MediaType.APPLICATION_JSON)
 //                        .content(JsonMapper.asJsonString(user1)))
 //                .andExpect(status().isAccepted());
@@ -150,7 +148,7 @@ public class EmailControllerTest {
 //        Mockito.doNothing().when(userService).updateById(anyLong(),any());
 //
 //        mvc.perform(MockMvcRequestBuilders
-//                        .put("/api/users/4/")
+//                        .put("/api/emails/4/")
 //                        .contentType(MediaType.APPLICATION_JSON)
 //                        .content(JsonMapper.asJsonString(user1)))
 //                .andExpect(status().isNotFound());
