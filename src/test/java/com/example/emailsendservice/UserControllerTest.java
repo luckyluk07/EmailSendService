@@ -12,8 +12,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
 
-    @Mock
+    @MockBean
     private UserService userService;
     private User user1;
     private User user2;
@@ -79,10 +81,26 @@ public class UserControllerTest {
         Mockito.when(userService.findAll()).thenReturn(users);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/api/users/")
-                .contentType(MediaType.APPLICATION_JSON))
+                    .get("/api/users/")
+                    .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$",hasSize(3)));
+    }
+
+
+    @Test
+    public void findById_UsersExist_ReturnOkAndUser() throws Exception {
+        Mockito.when(userService.findById(user1.getId())).thenReturn(user1);
+
+        User user = userService.findById(1L);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/users/1/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$",hasSize(1)))
+                .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.username",user1.getUsername()));
     }
 }
