@@ -19,7 +19,7 @@ public class EmailSenderController {
         this.emailSenderService = service;
     }
 
-    @GetMapping("/sendmail/{id}")
+    @PostMapping("/sendmail/{id}")
     public ResponseEntity<Void> sendEmail(@PathVariable Long id, @Valid @RequestBody MailMessage message) {
         if (!this.emailSenderService.sendSimpleMessage(id, message)) {
             return ResponseEntity.notFound().build();
@@ -27,7 +27,7 @@ public class EmailSenderController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/sendToAll")
+    @PostMapping("/sendToAll")
     public ResponseEntity<Void> sendEmailToAll(@Valid @RequestBody MailMessage message) {
         this.emailSenderService.sendToAll(message);
         return ResponseEntity.ok().build();

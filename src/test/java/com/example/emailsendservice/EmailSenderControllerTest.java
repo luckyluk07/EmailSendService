@@ -31,7 +31,7 @@ public class EmailSenderControllerTest {
         Mockito.when(emailSenderService.sendSimpleMessage(anyLong(), any())).thenReturn(true);
 
         mvc.perform(MockMvcRequestBuilders
-                        .get("/api/sendmail/1/")
+                        .post("/api/sendmail/1/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonMapper.asJsonString(MailMessage.builder()
                                 .subject("subject")
@@ -47,7 +47,7 @@ public class EmailSenderControllerTest {
         Mockito.when(emailSenderService.sendSimpleMessage(anyLong(), any())).thenReturn(false);
 
         mvc.perform(MockMvcRequestBuilders
-                        .get("/api/sendmail/4/")
+                        .post("/api/sendmail/4/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonMapper.asJsonString(MailMessage.builder()
                                 .subject("subject")
@@ -63,7 +63,7 @@ public class EmailSenderControllerTest {
         Mockito.doNothing().when(emailSenderService).sendToAll(any());
 
         mvc.perform(MockMvcRequestBuilders
-                        .get("/api/sendToAll")
+                        .post("/api/sendToAll")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonMapper.asJsonString(MailMessage.builder()
                                 .subject("subject")
