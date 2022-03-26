@@ -2,7 +2,6 @@ package com.example.emailsendservice;
 
 import com.example.emailsendservice.Controllers.UserController;
 import com.example.emailsendservice.Mappers.JsonMapper;
-import com.example.emailsendservice.Mappers.UserMapper;
 import com.example.emailsendservice.Models.User;
 import com.example.emailsendservice.Models.UserDto;
 import com.example.emailsendservice.Services.UserService;
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,6 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
+
+    private ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     private MockMvc mvc;
 
@@ -120,7 +123,7 @@ public class UserControllerTest {
         mvc.perform(MockMvcRequestBuilders
                         .post("/api/users/")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonMapper.asJsonString(UserMapper.userModelToUserDto(user1))))
+                        .content(JsonMapper.asJsonString(modelMapper.map(user1, UserDto.class))))
                 .andExpect(status().isCreated());
 
         Mockito.verify(userService, times(1)).create(any(UserDto.class));

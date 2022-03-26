@@ -1,7 +1,7 @@
 package com.example.emailsendservice;
 
-import com.example.emailsendservice.Mappers.UserMapper;
 import com.example.emailsendservice.Models.User;
+import com.example.emailsendservice.Models.UserDto;
 import com.example.emailsendservice.Repositories.UserRepository;
 import com.example.emailsendservice.Services.UserService;
 import org.junit.jupiter.api.AfterEach;
@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
+
+    ModelMapper modelMapper = new ModelMapper();
 
     @Mock
     private UserRepository userRepository;
@@ -121,7 +124,7 @@ public class UserServiceTest {
     void updateById_existingUser_serviceCallRepositoryMethod() {
         Mockito.doNothing().when(userRepository).updateUser(anyLong(), anyString(), anyString());
 
-        this.userService.updateById(user1.getId(), UserMapper.userModelToUserDto(user1));
+        this.userService.updateById(user1.getId(), modelMapper.map(user1, UserDto.class));
 
         Mockito.verify(userRepository, times(1)).updateUser(anyLong(), anyString(), anyString());
     }
