@@ -1,9 +1,9 @@
 package com.example.emailsendservice.Services;
 
 import com.example.emailsendservice.Models.EmailDto;
-import com.example.emailsendservice.Mappers.EmailMapper;
 import com.example.emailsendservice.Models.User;
 import com.example.emailsendservice.Repositories.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,25 +16,26 @@ import java.util.stream.Collectors;
 public class EmailService {
 
     private UserRepository repository;
-    private EmailMapper mapper;
+    private ModelMapper modelMapper;
 
     @Autowired
     public EmailService(UserRepository userRepository) {
         this.repository = userRepository;
-        this.mapper = new EmailMapper();
+        this.modelMapper = new ModelMapper();
     }
 
     public List<EmailDto> findAll() {
         return this.repository.findAll()
                 .stream()
-                .map(x -> mapper.userModelToEmailDto(x))
+                .map(x -> modelMapper.map(x, EmailDto.class))
                 .collect(Collectors.toList());
     }
 
     public EmailDto findById(Long id) {
         Optional<User> user = this.repository.findById(id);
         if (user.isPresent()) {
-            return this.mapper.userModelToEmailDto(user.get());
+            EmailDto dto = modelMapper.map(user.get(), EmailDto.class);
+            return dto;
         }
         return null;
     }

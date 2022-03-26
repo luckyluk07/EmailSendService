@@ -1,9 +1,9 @@
 package com.example.emailsendservice.Controllers;
 
-import com.example.emailsendservice.Mappers.UserMapper;
 import com.example.emailsendservice.Models.User;
 import com.example.emailsendservice.Models.UserDto;
 import com.example.emailsendservice.Services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +17,19 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/api/users")
 public class UserController {
     private UserService userService;
+    private ModelMapper modelMapper;
 
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+        this.modelMapper = new ModelMapper();
     }
 
     @GetMapping
     public ResponseEntity<List<UserDto>> findAll() {
         return ResponseEntity.ok(this.userService.findAll()
                 .stream()
-                .map(UserMapper::userModelToUserDto)
+                .map(x -> modelMapper.map(x, UserDto.class))
                 .collect(Collectors
                         .toList()));
     }
@@ -38,7 +40,7 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(UserMapper.userModelToUserDto(user));
+        return ResponseEntity.ok(modelMapper.map(user, UserDto.class));
     }
 
     @PostMapping
