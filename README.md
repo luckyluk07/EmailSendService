@@ -21,6 +21,9 @@
   <li>
     <a href="#Usage">Usage</a>
   </li>
+  <li>
+    <a href="#TODO">TODO</a>
+  </li>
 </ol>
 
 
@@ -90,3 +93,7 @@ spring.mail.password=type_new_password
  ```sh
    http://localhost:8080/swagger-ui.html
    ```
+
+## TODO
+* Pagination for get
+* Add logging
